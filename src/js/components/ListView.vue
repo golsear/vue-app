@@ -1,13 +1,19 @@
 <template>
-    <div class="list">
-        <h1>List view</h1>
-        <button @click="getMovie()">Get movie</button>
-        <button @click="getMovieSessions()">Get movie sessions</button>
-
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h1>List view</h1>
+                <button @click="getMovie()">Get movie</button>
+                <button @click="getMovieSessions()">Get movie sessions</button>
+            </div>
+        </div>
         <template v-for="movie in movies">
-            <div class="square-col-6">
-                {{ movie.name }}
-                <router-link :to="'/movie/' + movie.id">{{ movie.name }}</router-link>
+            <div class="row">
+                <div class="col-12 col-md-4"><img :src="movie.image" /></div>
+                <div class="col-12 col-md-8">
+                    <router-link :to="'/movie/' + movie.id">{{ movie.name }}</router-link>
+                    <router-link :to="'/movie/' + movie.id" class="btn">Read more</router-link>
+                </div>
             </div>
         </template>
     </div>

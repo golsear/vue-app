@@ -1,9 +1,18 @@
 <template>
-    <div class="list">
-        <h1>Detail view</h1>
-        <router-link to="/">Go to list view</router-link>
-        <div>
-            {{ movie.name }}
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <router-link to="/">Go to list view</router-link>
+                <h1>{{ movie.name }}</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div><img :src="movie.image" /></div>
+                <div>{{ movie.description }}</div>
+                <div v-html="movie.additional"></div>
+            </div>
+
         </div>
     </div>
 </template>
