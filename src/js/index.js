@@ -1,5 +1,6 @@
 import "../scss/index.scss";
 import "bootstrap";
+import moment from 'moment';
 
 import Vue from 'vue';
 import VueRouter from 'vue-router';
@@ -12,6 +13,12 @@ Vue.use(Vuex);
 
 Vue.component('list-view', ListView);
 Vue.component('detail-view', DetailView);
+
+Vue.filter('formatDate', function (value) {
+    if (value) {
+        return moment(String(value)).format('DD.MM.YYYY');
+    }
+});
 
 
 // Register globals.
