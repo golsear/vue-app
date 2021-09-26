@@ -1,46 +1,51 @@
 <template>
-    <div>
-        <div><router-link to="/">Go to list view</router-link></div>
-        <h1>Show places</h1>
-        <div>
-            {{ $route.params.id }}
-            {{ $route.params.daytime }}
-            {{ $route.params.showdate }}
+    <div class="container show-places">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="my-3">Show places</h1>
+                <div class="form-inline mb-2">
+                    <router-link class="btn btn-primary btn-smk mr-3 mb-3" to="/">Go to list view</router-link>
+                    <router-link class="btn btn-primary btn-smk mr-3 mb-3" :to="'/movie/' + $route.params.id">Go to movie</router-link>
+                </div>
+            </div>
         </div>
-        <div>
-            <button :disabled="!seat.length" @click="bookPlace()" class="btn">Book a place</button>
-            <template v-for="(row, key) in places">
-                <div>
-                    <div>{{ row[0].row }}</div>
-                    <template v-for="(seatObj, seatKey) in row[1]">
-                        <label>
-                            <span>{{ seatObj.seat }} : {{ seatObj.is_free }}</span>
-                            <input type="checkbox"
-                                   :disabled="!seatObj.is_free"
-                                   :id="'seat_' + row[0].row + '_' + seatObj.seat"
-                                   :value="'seat_' + row[0].row + '_' + seatObj.seat"
-                                   v-model="seat"/>
-                            <span class="checkmark"></span>
-                        </label>
-                    </template>
-                    <!--<label>
-                        <span>{{ session.showdate | formatDate}}</span>
-                        <input type="radio" name="session" :value="session.showdate"
-                               v-model="selectedSessionn"/>
-                        <span class="checkmark"></span>
-                    </label>
-                    <div v-if="session.showdate == selectedSessionn">
-                        <template v-for="(daytime) in daytimeStrToArr(session.daytime)">
-                            <label>
-                                <span>{{ daytime }}</span>
-                                <input type="radio" :name="'selectedDaytime' + key" :value="daytime"
-                                       v-model="selectedDaytimeArr[key]"/>
-                                <span class="checkmark"></span>
+        <div class="row movie mb-5">
+            <div class="col-12 col-md-4">
+                <img class="movie__image d-block mb-3 mb-md-0" :src="movie.image" />
+            </div>
+            <div class="col-12 col-md-8">
+                <h2 class="d-inline-block mb-3">{{ movie.name }}</h2>
+                <div v-html="movie.description" class="mb-3"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div>Day: {{ $route.params.showdate | formatDate}}</div>
+                <div>Time: {{ $route.params.daytime }}</div>
+                <div>Seat: {{ seats }}</div>
+                <button :disabled="!seat.length" @click="bookPlace()" class="btn btn-primary my-3">Book a place</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <template v-for="(row, key) in places">
+                    <div class="text-center mb-3">
+                        <div class="mb-3">Row: {{ row[0].row }}</div>
+                        <template v-for="(seatObj, seatKey) in row[1]">
+                            <label class="app-radio mr-3 mb-3">
+                                <span class="app-radio__label">{{ seatObj.seat }}</span>
+                                <input type="checkbox"
+                                       :disabled="!seatObj.is_free"
+                                       :id="'seat_' + row[0].row + '_' + seatObj.seat"
+                                       :value="'seat_' + row[0].row + '_' + seatObj.seat"
+                                       v-model="seat"/>
+                                <span class="app-radio__checkmark"></span>
                             </label>
                         </template>
-                    </div>-->
-                </div>
-            </template>
+                    </div>
+                </template>
+                <button :disabled="!seat.length" @click="bookPlace()" class="btn btn-primary mb-5">Book a place</button>
+            </div>
         </div>
     </div>
 </template>
@@ -55,10 +60,24 @@
         data() {
             return {
                 places: [],
-                seat: []
+                seat: [],
+                movie: {},
             }
         },
         methods: {
+            getMovieById: function (id) {
+                let self = this;
+
+                axios.get('https://cinema-api-test.y-media.io/v1/movies?movie_id=' + id)
+                    .then(response => {
+                        let data = response.data;
+
+                        self.movie = data.data[0];
+                    })
+                    .catch(e => {
+                        alert('Something went wrong: ShowPlaces : getMovieById');
+                    });
+            },
             checkForFreePlaces: function () {
                 let self = this;
 
@@ -69,7 +88,7 @@
                         self.places = data.data;
                     })
                     .catch(e => {
-                        alert('Something went wrong: Sessions: getMovieSessions');
+                        alert('Something went wrong: ShowPlaces: checkForFreePlaces');
                     });
             },
             bookPlace: function () {
@@ -92,14 +111,17 @@
                         console.log(response);
                     })
                     .catch(e => {
-                        alert('Something went wrong: bookPlace');
+                        alert('Something went wrong: ShowPlaces : bookPlace');
                         console.log(e);
                     });
             },
 
         },
         mounted() {
+            let id = this.$route.params.id;
+
             this.checkForFreePlaces();
+            this.getMovieById(id);
         },
         created() {
 
@@ -110,7 +132,7 @@
 
                 for (var i = 0; i < this.seat.length; i++) {
                     let seatArr = this.seat[i].split("_");
-                    console.log(seatArr);
+
                     data.push({
                         movie_id: +this.$route.params.id,
                         row: +seatArr[1],
@@ -118,11 +140,24 @@
                         showdate: this.$route.params.showdate,
                         daytime: this.$route.params.daytime
                     });
-
-
                 }
 
                 return data;
+            },
+            seats: function () {
+                let seats = '';
+
+                for (var i = 0; i < this.seat.length; i++) {
+                    let seatArr = this.seat[i].split("_");
+
+                    if ( i > 0 ) {
+                        seats += ', ';
+                    }
+
+                    seats += 'Row ' + seatArr[1] + ' Seat ' + seatArr[2];
+                }
+
+                return seats;
             }
         },
         watch: {

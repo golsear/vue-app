@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-12">
                 <h1 class="my-3">{{ movie.name }}</h1>
-                <router-link class="btn btn-primary btn-smk mb-3" to="/">Go to list view</router-link>
+                <router-link class="btn btn-primary btn-smk mb-5" to="/">Go to list view</router-link>
             </div>
         </div>
         <div class="row movie mb-5">
