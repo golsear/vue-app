@@ -4,8 +4,6 @@
             <button @click="getMovieSessions(movieId)" class="btn btn-info mb-3 mr-3">Sessions</button>
             <router-link class="btn btn-info mb-3" v-if="selectedSessionn && selectedDaytime" :to="'/showPlaces/' + movieId + '/' + selectedDaytime + '/' + selectedSessionn">Check for free places</router-link>
         </div>
-
-
         <div v-if="sessions">
             <template v-for="(session, key) in sessions">
                 <div class="mt-2">
