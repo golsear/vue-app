@@ -85,10 +85,7 @@
 
                 if (self.genre) {
                     params += 'genres=' + self.genre;
-                    console.log('genre', self.genre);
                 }
-
-                console.log(params);
 
                 axios.get('https://cinema-api-test.y-media.io/v1/movies' + params)
                //axios.get('https://cinema-api-test.y-media.io/v1/movies?genres=comedy')
@@ -99,12 +96,13 @@
                         this.$store.commit('updateMovies', data.data);
                     })
                     .catch(e => {
-                        alert('Something went wrong: ListView : getMovies');
+                        alert('Something went wrong: ListView : searchMovies');
                     });
             },
             resetFilters: function () {
                 this.name = '';
                 this.genre = '';
+                this.getMovies();
             }
         },
         mounted() {
