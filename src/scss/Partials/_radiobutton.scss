@@ -1,0 +1,46 @@
+.app-radio {
+    @include user-select(none);
+    @extend .btn-sm;
+    @extend .btn-info;
+    position: relative;
+
+    &__label {
+        position: relative;
+        z-index: 1;
+    }
+
+    input {
+        cursor: pointer;
+        height: 0;
+        opacity: 0;
+        position: absolute;
+        width: 0;
+
+        &:checked {
+            & ~ {
+                .app-radio__checkmark {
+                    @extend .btn-warning;
+
+                    &:after {
+                        bottom: 0;
+                        content: '';
+                        display: block;
+                        left: 0;
+                        position: absolute;
+                        right: 0;
+                        top: 0;
+                        z-index: 0;
+                    }
+                }
+            }
+        }
+    }
+
+    &__checkmark {
+        bottom: 0;
+        left: 0;
+        position: absolute;
+        right: 0;
+        top: 0;
+    }
+}

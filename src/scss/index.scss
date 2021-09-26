@@ -4,4 +4,7 @@
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
 @import "~select2/src/scss/core.scss";
-//@import "configurator/partials/variables";
+@import "mixins";
+@import "Partials/movie";
+@import "Partials/sessions";
+@import "Partials/radiobutton";

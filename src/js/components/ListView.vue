@@ -1,31 +1,39 @@
 <template>
-    <div class="container">
+    <div class="container list-view">
         <div class="row">
             <div class="col-12">
-                <h1>List view</h1>
+                <h1 class="my-3">List view</h1>
             </div>
         </div>
-        <div class="filters">
-            {{ genre }}
-            <select v-model="genre">
-                <option value="">Please select genre</option>
-                <option v-for="option in genreOptions" :value="option.value">
-                    {{ option.text }}
-                </option>
-            </select>
-            <input v-model="name" placeholder="Name" />
-            <button class="btn" @click="searchMovies()">Search</button>
+        <div class="row">
+            <div class="col-12">
+                <div class="form-inline mb-2">
+                    <select class="form-control mr-3 mb-3" v-model="genre">
+                        <option value="">Please select genre</option>
+                        <option v-for="option in genreOptions" :value="option.value">
+                            {{ option.text }}
+                        </option>
+                    </select>
+                    <input class="form-control mr-3 mb-3" v-model="name" placeholder="Name" />
+                    <button class="btn btn-primary mr-3 mb-3" @click="searchMovies()">Search</button>
+                    <button class="btn btn-primary mr-3 mb-3" :disabled="!name && !genre" @click="resetFilters()">Reset filters</button>
+                </div>
+            </div>
         </div>
         <template v-for="movie in movies">
-            <div class="row">
-                <div class="col-12 col-md-4"><img :src="movie.image" /></div>
+            <div class="row movie mb-5">
+                <div class="col-12 col-md-4">
+                    <router-link :to="'/movie/' + movie.id" class="d-block mb-3 mb-md-0">
+                        <img class="movie__image" :src="movie.image" />
+                    </router-link>
+                </div>
                 <div class="col-12 col-md-8">
                     <div>
-                        <router-link :to="'/movie/' + movie.id">{{ movie.name }}</router-link>
+                        <router-link :to="'/movie/' + movie.id" class="d-inline-block mb-3 h2">{{ movie.name }}</router-link>
                     </div>
-                    <div v-html="movie.description"></div>
+                    <div v-html="movie.description" class="mb-3"></div>
                     <div>
-                        <router-link :to="'/movie/' + movie.id" class="btn">Read more</router-link>
+                        <router-link :to="'/movie/' + movie.id" class="btn btn-primary mb-3">Read more</router-link>
                     </div>
                     <sessions :movie-id="movie.id"></sessions>
                 </div>
@@ -93,6 +101,10 @@
                     .catch(e => {
                         alert('Something went wrong: ListView : getMovies');
                     });
+            },
+            resetFilters: function () {
+                this.name = '';
+                this.genre = '';
             }
         },
         mounted() {

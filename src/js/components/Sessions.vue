@@ -1,24 +1,27 @@
 <template>
-    <div>
-        <button @click="getMovieSessions(movieId)" class="btn">Sessions</button>
-        <router-link v-if="selectedSessionn && selectedDaytime" :to="'/showPlaces/' + movieId + '/' + selectedDaytime + '/' + selectedSessionn">Check for free places</router-link>
+    <div class="sessions">
+        <div class="form-inline mb-2">
+            <button @click="getMovieSessions(movieId)" class="btn btn-info mb-3 mr-3">Sessions</button>
+            <router-link class="btn btn-info mb-3" v-if="selectedSessionn && selectedDaytime" :to="'/showPlaces/' + movieId + '/' + selectedDaytime + '/' + selectedSessionn">Check for free places</router-link>
+        </div>
+
 
         <div v-if="sessions">
             <template v-for="(session, key) in sessions">
-                <div>
-                    <label>
-                        <span>{{ session.showdate | formatDate}}</span>
+                <div class="mt-2">
+                    <label class="app-radio">
+                        <span class="app-radio__label">{{ session.showdate | formatDate}}</span>
                         <input type="radio" name="session" :value="session.showdate"
                                v-model="selectedSessionn"/>
-                        <span class="checkmark"></span>
+                        <span class="app-radio__checkmark"></span>
                     </label>
-                    <div v-if="session.showdate == selectedSessionn">
+                    <div class="form-inline" v-if="session.showdate == selectedSessionn">
                         <template v-for="(daytime) in daytimeStrToArr(session.daytime)">
-                            <label>
-                                <span>{{ daytime }}</span>
+                            <label class="app-radio mr-3 mb-3">
+                                <span class="app-radio__label">{{ daytime }}</span>
                                 <input type="radio" :name="'selectedDaytime' + key" :value="daytime"
                                        v-model="selectedDaytimeArr[key]"/>
-                                <span class="checkmark"></span>
+                                <span class="app-radio__checkmark"></span>
                             </label>
                         </template>
                     </div>
